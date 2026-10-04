@@ -2,7 +2,6 @@
 
 # Minimum spanning tree from the shared pairwise SNP allele-sharing distance.
 # The distance matrix is produced by pairwise_snp_allele_sharing_distance.R.
-# This script does not recalculate PS or apply SNP/sample QC filters.
 
 suppressPackageStartupMessages({
   library(optparse)
