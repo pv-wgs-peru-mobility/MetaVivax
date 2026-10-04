@@ -2,6 +2,7 @@
 
 # Minimum spanning tree from the shared pairwise SNP allele-sharing distance.
 # The distance matrix is produced by pairwise_snp_allele_sharing_distance.R.
+# This script does not recalculate PS or apply SNP/sample QC filters.
 
 suppressPackageStartupMessages({
   library(optparse)
@@ -93,3 +94,97 @@ read_metadata <- function(path, d, expected_travelers) {
   meta <- meta[match(ids, meta$Sample), , drop = FALSE]
   rownames(meta) <- meta$Sample
 
+  key <- iconv(trimws(as.character(meta$community)), to = "ASCII//TRANSLIT")
+  key <- gsub("[^a-z]", "", tolower(key))
+  community_names <- c(libertad = "Libertad",
+                       gamitanacocha = "Gamitanacocha",
+                       urcomirano = "Urco Miraño")
+  if (anyNA(key) || any(!key %in% names(community_names))) {
+    stop("Community must be Libertad, Gamitanacocha, or Urco Miraño.")
+  }
+  meta$community <- unname(community_names[key])
+
+  travel <- tolower(trimws(as.character(meta$travel)))
+  yes <- travel %in% c("1", "traveler", "traveller", "yes", "true")
+  no <- travel %in% c("0", "non-traveler", "non-traveller", "nontraveler",
+                     "nontraveller", "no", "false")
+  if (anyNA(travel) || any(!(yes | no))) {
+    stop("Metadata travel must encode traveler as 1 and non-traveler as 0.")
+  }
+  meta$travel <- as.integer(yes)
+  if (expected_travelers >= 0L && sum(meta$travel) != expected_travelers) {
+    stop("Expected ", expected_travelers, " travelers; found ", sum(meta$travel), ".")
+  }
+
+  list(distance = d, metadata = meta)
+}
+
+d <- read_distance_matrix(opt$distance_matrix, opt$expected_samples)
+input <- read_metadata(opt$metadata, d, opt$expected_travelers)
+d <- input$distance
+meta <- input$metadata
+
+# Explicitly include every pair, including pairs with distance zero. A weighted
+# adjacency matrix would drop zero-distance edges before constructing the MST.
+ij <- which(upper.tri(d), arr.ind = TRUE)
+edges <- data.frame(from = rownames(d)[ij[, 1L]],
+                    to = colnames(d)[ij[, 2L]],
+                    weight = d[ij], stringsAsFactors = FALSE)
+g <- graph_from_data_frame(edges, directed = FALSE,
+                           vertices = data.frame(name = rownames(d)))
+tree <- mst(g, weights = E(g)$weight)
+if (vcount(tree) != nrow(d) || ecount(tree) != nrow(d) - 1L ||
+    !is_connected(tree)) {
+  stop("The MST did not connect every sample.")
+}
+
+V(tree)$community <- meta[V(tree)$name, "community"]
+V(tree)$travel <- meta[V(tree)$name, "travel"]
+
+mst_edges <- as_data_frame(tree, what = "edges")
+names(mst_edges)[names(mst_edges) == "weight"] <- "distance_1_minus_PS"
+mst_edges$community_1 <- meta[mst_edges$from, "community"]
+mst_edges$community_2 <- meta[mst_edges$to, "community"]
+mst_edges$travel_1 <- meta[mst_edges$from, "travel"]
+mst_edges$travel_2 <- meta[mst_edges$to, "travel"]
+mst_edges <- mst_edges[order(mst_edges$from, mst_edges$to), , drop = FALSE]
+
+dir.create(opt$out_dir, recursive = TRUE, showWarnings = FALSE)
+write.table(mst_edges, file.path(opt$out_dir, "mst_edges.tsv"),
+            sep = "\t", row.names = FALSE, quote = FALSE)
+write_graph(tree, file.path(opt$out_dir, "mst_graph.graphml"), format = "graphml")
+
+community_colors <- c("Libertad" = "#3D7BFF",
+                      "Gamitanacocha" = "#00C853",
+                      "Urco Miraño" = "#FF7A00")
+set.seed(323)
+lay <- layout_with_fr(tree, niter = 3000L, weights = rep(1, ecount(tree)))
+
+plot_mst <- function() {
+  par(mar = c(1, 1, 2, 1))
+  plot(tree, layout = lay, vertex.size = 11,
+       vertex.color = unname(community_colors[V(tree)$community]),
+       vertex.frame.color = "black",
+       vertex.label = ifelse(V(tree)$travel == 1L, "x", ""),
+       vertex.label.dist = 0, vertex.label.cex = 0.8,
+       vertex.label.color = "black", vertex.label.font = 2,
+       edge.color = "#444444", edge.width = 1.2, margin = 0.13)
+  title(main = "Minimum spanning tree (1 - PS)")
+  legend("topright", legend = names(community_colors), pch = 21,
+         pt.bg = unname(community_colors), col = "black", pt.cex = 1.3,
+         bty = "n", cex = 0.85, title = "Community")
+  legend("topleft", legend = "x inside node: traveler-associated infection",
+         bty = "n", cex = 0.75)
+}
+
+pdf(file.path(opt$out_dir, "mst_allele_sharing.pdf"),
+    width = 9, height = 9, useDingbats = FALSE)
+plot_mst()
+dev.off()
+png(file.path(opt$out_dir, "mst_allele_sharing.png"),
+    width = 2700, height = 2700, res = 300)
+plot_mst()
+dev.off()
+
+message("MST completed: ", vcount(tree), " samples, ", ecount(tree), " edges.")
+message("Output: ", opt$out_dir)
