@@ -58,7 +58,6 @@ Outputs are written to:
 | `77.19298_ibd_proportion.csv` | SNP-level proportion of sample pairs inferred to be IBD. |
 | `77.19298_IBD_proportions.pdf` | Plot of IBD proportions. |
 | `77.19298_IBD_segments.pdf` | Plot of detected IBD segments. |
-| `77.19298_clusters_prop0.40.rds` | IBD clustering result at prop = 0.40. |
 | `77.19298_IBD_clusters_network.pdf` | IBD cluster network. |
 | `77.19298_IBD_full_network.rds` | IBD network including isolated samples. |
 | `77.19298_IBD_network_full_colored.pdf` | Full IBD network plot. |
