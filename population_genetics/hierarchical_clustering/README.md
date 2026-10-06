@@ -10,8 +10,8 @@ It writes `results/pairwise_allele_sharing/pairwise_distance_matrix.tsv`, which 
 
 ## Heterozygous calls and polyclonality
 
-Heterozygous genotype calls are retained as two alleles and can contribute partial sharing (0.5) when a pair shares one allele. This incorporates the observed alleles in mixed calls into the distance calculation. The script does **not** estimate the number of parasite clones or resolve the genotypes of individual clones in a polyclonal infection.
+Heterozygous genotype calls are retained as two alleles and can contribute partial sharing (0.5) when a pair shares one allele. This incorporates the observed alleles in mixed calls into the distance calculation. The script does **not** estimate the number of parasite clones.
 
 ## Clustering
 
-`hierarchical_clustering.R` reads the distance matrix and sample metadata, then applies average-linkage hierarchical clustering (`hclust(method = "average")`). Its default cut produces four clusters. The script writes cluster assignment and summary tables plus a dendrogram under `results/hierarchical_clustering/`.
+`hierarchical_clustering.R` reads the distance matrix and sample metadata, then applies average-linkage hierarchical clustering (`hclust(method = "average")`). The script writes cluster assignment and summary tables plus a dendrogram under `results/hierarchical_clustering/`.
