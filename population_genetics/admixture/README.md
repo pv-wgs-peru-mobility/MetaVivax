@@ -29,8 +29,6 @@ This folder contains the scripts used to prepare ADMIXTURE input files, perform 
 | K values tested | 2 to 10 |
 | Independent ADMIXTURE runs per K | 5 |
 | Bootstrap replicates per run | 100 |
-| Manuscript K for unpruned data | K = 4 |
-| Manuscript K for LD-pruned data | K = 5 |
 
 The LD-pruning script stops if the observed sample or SNP counts do not match the manuscript values.
 
