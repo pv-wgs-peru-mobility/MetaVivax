@@ -1,6 +1,6 @@
 # Identity-by-descent (IBD) analysis
 
-`IBD.R` estimates IBD segments from PLINK PED/MAP genotypes with isoRelate, summarizes pairwise genome sharing, and compares IBD networks at **5%, 20%, 40%, 60%, and 80%** sharing thresholds. This analysis starts from the PED/MAP files; it does not use the allele-sharing distance matrix made for the minimum spanning tree and hierarchical clustering.
+`IBD.R` estimates IBD segments from PLINK PED/MAP genotypes with isoRelate, summarizes pairwise genome sharing, and compares IBD networks at **5%, 20%, 40%, 50%,60%, and 80%** sharing thresholds. This analysis starts from the PED/MAP files; it does not use the allele-sharing distance matrix made for the minimum spanning tree and hierarchical clustering.
 
 ## Files and inputs
 
@@ -9,7 +9,7 @@
 - Default genotype inputs: `/scratch/antwerpen/208/vsc20843/WGS/results/gatk/pv/IBD/New/77/77.19298.ped` and `.map`.
 - Default metadata: `/scratch/antwerpen/208/vsc20843/WGS/results/gatk/pv/IBD/SNP_matrix_with_metadata.csv`, with `Sample` or `id`, `travel`, and optionally `community` columns. Sample identifiers must match the filtered PED by FID/IID, IID, or FID. Every retained sample needs valid travel metadata.
 
-The script applies MAF ≥0.01, isolate missingness ≤0.40, and SNP missingness ≤0.60 through `getGenotypes()`. It assigns MOI=2 to all isolates, as the supplied scripts did. That is a **modeling assumption**, not an MOI estimate. Set `IBD_MOI_MODE=ped` to use curated 1/2 values from PED column 5 instead. By default, MAP genetic positions are recalculated as `bp / 13700` cM, matching the supplied scripts. Set `IBD_MAP_MODE=input` to use existing cM values in MAP column 3.
+The script applies MAF ≥0.01, isolate missingness ≤0.30, and SNP missingness ≤0.60 through `getGenotypes()`. It assigns MOI=2 to all isolates, as the supplied scripts did. That is a **modeling assumption**, not an MOI estimate. Set `IBD_MOI_MODE=ped` to use curated 1/2 values from PED column 5 instead. By default, MAP genetic positions are recalculated as `bp / 13700` cM, matching the supplied scripts. Set `IBD_MAP_MODE=input` to use existing cM values in MAP column 3.
 
 IBD segments are called with at least 450 SNPs, at least 700,000 bp, and genotyping error 0.001. The pairwise genome fraction is the sum of detected segment lengths for a sample pair divided by the total span from the first to last retained SNP on each chromosome. Networks join pairs whose fraction meets or exceeds the threshold; all filtered samples, including isolated ones, remain as vertices. This follows the fraction and threshold definition in [isoRelate's `getIBDpclusters()` implementation](https://rdrr.io/github/bahlolab/isoRelate/src/R/get_ibd_p_clusters.R).
 
