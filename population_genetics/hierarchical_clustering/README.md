@@ -19,7 +19,7 @@ The distance matrix contains pairwise genetic distances calculated as `1 - PS`.
 hclust(as.dist(dist_mat), method = "average")
 ```
 
-The default dendrogram cut is `K = 4`. Samples are colored by community, and traveler-associated infections are marked with a cross.
+The dendrogram cut is `K = 4`. Samples are colored by community, and traveler-associated infections are marked with a cross.
 
 ## Outputs
 
