@@ -10,8 +10,7 @@ It writes `results/pairwise_allele_sharing/pairwise_distance_matrix.tsv`, which 
 
 ## Heterozygous calls and polyclonality
 
-Heterozygous genotype calls are retained as two alleles and can contribute partial sharing (0.5) when a pair shares one allele. This incorporates the observed alleles in mixed calls into the distance calculation. The script does **not** estimate the number of parasite clones or resolve the genotypes of individual clones in a polyclonal infection.
-
+Heterozygous genotype calls are retained as two alleles and can contribute partial sharing (0.5) when a pair shares one allele. This incorporates the observed alleles in mixed calls into the distance calculation. The script does **not** estimate the number of parasite clones.
 ## MST analysis and outputs
 
 `mst_tree.R` reads the distance matrix and sample metadata, then uses the `1 - PS` distances as edge weights to connect all samples in a minimum spanning tree. Node colors indicate community, and an `x` inside a node marks a traveler-associated infection. The script saves `mst_edges.tsv`, `mst_graph.graphml`, `mst_allele_sharing.pdf`, and `mst_allele_sharing.png` under `results/minimum_spanning_tree/`. Node positions in the figure are for visualization; the genetic distances are recorded as edge weights in the output files.
