@@ -2,11 +2,9 @@
 
 This folder contains the scripts used to prepare genotype datasets for ADMIXTURE, run ancestry-inference analyses, and generate ancestry bar plots for the *Plasmodium vivax* WGS dataset.
 
-In the manuscript workflow, ADMIXTURE is used to evaluate parasite population structure and to assess whether traveler-associated infections show ancestry profiles distinct from infections sampled in the three study communities.
-
 ## Scripts
 
-`ld_pruning_admixture.sh` prepares the ADMIXTURE input files. It converts the analysis VCF to PLINK BED format, applies the filtering settings used for the ADMIXTURE input, creates the unpruned dataset, and generates two LD-pruned datasets.
+`ld_pruning_admixture.sh` prepares the ADMIXTURE input files. It converts the VCF to PLINK BED format, applies the filtering settings used for the ADMIXTURE input, creates the unpruned dataset, and generates two LD-pruned datasets.
 
 `run_admixture.sh` runs ADMIXTURE on each prepared dataset for `K = 2` to `K = 10`, summarizes cross-validation error, and creates ancestry bar plots using the sample metadata.
 
@@ -33,7 +31,7 @@ The VCF is converted to PLINK BED format using PLINK v1.9. The preparation scrip
 ```text
 per-SNP missingness <= 60%
 per-sample missingness <= 30%
-MAF >= 0.001
+MAF >= 0.01
 ```
 
 The script checks that the prepared data match the manuscript dataset. After filtering, the expected number of samples is `56`, and the unpruned dataset is expected to contain `16,485` SNPs.
