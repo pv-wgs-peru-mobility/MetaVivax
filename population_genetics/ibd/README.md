@@ -19,7 +19,7 @@ The PED file contains the isolate genotypes and the MAP file contains the SNP po
 position in cM = position in bp / 13,700
 ```
 
-PED column 5 is set to `2` before the `isoRelate` steps, following the infection coding used for this IBD analysis.
+PED column 5 is used by isoRelate as the infection/MOI coding field. It is set to 2 for all isolates before the isoRelate steps so that mixed genotype states can be retained in the IBD analysis. This coding allows the analysis to use the observed allele information from infections with more than one allele at a SNP, rather than forcing all infections to be treated as strictly monoclonal.
 
 ## Analysis workflow
 
@@ -50,7 +50,10 @@ After segment inference, the script creates the main IBD summaries. It writes th
 
 The script also produces two summary plots: one showing the distribution of IBD proportions and one showing the distribution of detected IBD segments.
 
-Finally, the script performs IBD clustering using `getIBDpclusters()` with `prop = 0.40`. The resulting network represents pairs of isolates connected by IBD sharing at this threshold. A second full-network object is also created by adding isolates with no IBD links, so that connected and isolated samples are both represented in the final network output.
+Finally, the script performs IBD clustering using getIBDpclusters(). In the reported analysis, this clustering step was repeated across a range of IBD proportion thresholds: 0.05, 0.20, 0.40, 0.50, 0.60, 0.80, and 0.90. These thresholds were used to evaluate how the inferred IBD network changed from permissive to more stringent definitions of relatedness.
+
+Networks were retained and summarized up to the 0.80 threshold. At 0.90, no reportable IBD network result was obtained, so the 0.90 threshold was not included in the final reported outputs.
+A second full-network object is also created by adding isolates with no IBD links at the selected threshold. This keeps connected and isolated samples in the same network object and allows the final network plot to show both isolates with IBD links and isolates without detectable links at that threshold.
 
 ## Run
 
