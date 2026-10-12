@@ -8,7 +8,7 @@ pairwise_snp_allele_sharing_distance.R
 Purpose
 -------
 Calculate pairwise SNP similarity (PS) and genetic distance (1 - PS) for use in
-minimum spanning tree and hierarchical clustering analyses.
+minimum spanning tree (MST) and hierarchical clustering analyses.
 
 Required R packages
 -------------------
@@ -21,8 +21,7 @@ Default input file:
 
   data/analysis_ready/pv_56samples_16485snps_gt.tsv
 
-The script expects the common analysis-ready genotype dataset used for the
-population-genetic analyses. Upstream quality control has already been applied,
+Upstream quality control has already been applied,
 including genotype depth >5, sample missingness <=40%, SNP missingness <=50%,
 and retention of polymorphic biallelic SNPs. The resulting dataset contains
 56 samples and 16,485 SNPs.
@@ -60,7 +59,6 @@ Genetic distance is:
 
   distance = 1 - PS
 
-No additional SNP- or sample-level filtering is performed in this script.
 
 Missing pairwise comparisons
 ----------------------------
