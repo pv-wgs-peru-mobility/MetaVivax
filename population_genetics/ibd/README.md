@@ -73,19 +73,10 @@ Outputs are written to:
 
 The main output files are:
 
-- `77.19298_geno.rds`: filtered genotype object from `getGenotypes()`
-- `77.19298_params.rds`: IBD model parameters from `getIBDparameters()`
-- `77.19298_ibd_segments.rds`: detected IBD segments
 - `77.19298_ibd_segments.csv`: detected IBD segments in table format
-- `77.19298_ibd_summary.txt`: IBD segment summary
 - `77.19298_ibd_matrix.rds`: pairwise IBD matrix
-- `77.19298_ibd_proportion.csv`: pairwise IBD proportions
-- `77.19298_IBD_proportions.pdf`: plot of IBD proportions
-- `77.19298_IBD_segments.pdf`: plot of detected IBD segments
-- `77.19298_clusters_prop0.40.rds`: IBD clustering result at `prop = 0.40`
-- `77.19298_IBD_clusters_network.pdf`: IBD cluster network
-- `77.19298_IBD_full_network.rds`: full IBD network including isolates without IBD links
-- `77.19298_IBD_network_full_colored.pdf`: full IBD network plot
+- `77.19298_IBD_clusters_network.pdf`: IBD network at the selected threshold
+- `77.19298_IBD_network_full_colored.pdf`: full IBD network including isolates without IBD links
 
 ## Recommended repository location
 
