@@ -2,7 +2,6 @@
 
 This script creates the community-by-community identity-by-descent (IBD) heatmap used to summarize parasite relatedness between the three study communities. It is a downstream plotting and summary script: it does not re-run `isoRelate`, but uses the annotated pairwise IBD table generated from the IBD analysis.
 
-In the manuscript workflow, this script follows the IBD estimation described in the Methods section. It supports the IBD Results section by summarizing how often isolate pairs are classified as related within and between Libertad, Gamitanacocha, and Urco Mirano.
 
 ## Script
 
@@ -53,6 +52,13 @@ Libertad, Gamitanacocha, UrcoMirano
 Within-community cells show IBD relatedness among pairs of isolates sampled from the same community. Between-community cells show IBD relatedness among isolate pairs from two different communities. Each heatmap cell reports the number of related pairs, the total number of pairs, and the value of `R`.
 
 The color scale ranges from `0` to `1`, where darker red indicates a larger proportion of related pairs at the `IBD >= 0.50` threshold.
+
+Isolate pairs were classified as related when their pairwise IBD proportion was `>= 0.50` and as unrelated when their pairwise IBD proportion was `< 0.50`. This threshold was used to summarize strong pairwise relatedness in the community-level heatmap. The continuous pairwise IBD values were retained in the input table, while the threshold was used only to calculate the related-pair proportion `R` for each community pair.
+
+`R` was calculated as:
+
+```text
+R = number of pairs with IBD >= 0.50 / total number of pairs
 
 The script also writes a symmetry-check file to confirm that the heatmap values are identical in both directions for each community comparison.
 
