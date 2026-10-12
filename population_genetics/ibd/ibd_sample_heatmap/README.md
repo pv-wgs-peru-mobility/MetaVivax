@@ -34,7 +34,7 @@ sample_id, community, travel_status
 
 ## Method
 
-The script first reads the annotated pairwise IBD file and the cleaned metadata file. The pairwise file contains one row per sample pair, while the metadata file provides the community and travel-status information used to annotate the heatmap.
+The script first reads the annotated pairwise IBD file and the metadata file. The pairwise file contains one row per sample pair, while the metadata file provides the community and travel-status information used to annotate the heatmap.
 
 The heatmap matrix is then built by converting the pairwise IBD table into a symmetric sample-by-sample matrix. Each pairwise value is added in both directions, so that `sample1` versus `sample2` and `sample2` versus `sample1` have the same IBD value. The diagonal is set to `1`, representing each sample compared with itself.
 
