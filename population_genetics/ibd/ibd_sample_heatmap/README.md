@@ -12,7 +12,7 @@ ibd_sample_heatmap.R
 
 ## Input files
 
-The script uses the annotated pairwise IBD dataset and the cleaned sample metadata:
+The script uses the annotated pairwise IBD dataset and the sample metadata:
 
 ```text
 /scratch/antwerpen/208/vsc20843/WGS/results/gatk/pv/IBD/ibd_pairwise_relatedness_analysis/03_pairwise_ibd_dataset/77.19298_pairwise_ibd_annotated.csv
@@ -35,7 +35,7 @@ sample_id, community, travel_status
 
 ## Method
 
-The script first reads the annotated pairwise IBD file and the cleaned metadata file. The pairwise file contains one row per sample pair, while the metadata file provides the community and travel-status information used to annotate the heatmap.
+The script first reads the annotated pairwise IBD file and the metadata file. The pairwise file contains one row per sample pair, while the metadata file provides the community and travel-status information used to annotate the heatmap.
 
 The heatmap matrix is then built by converting the pairwise IBD table into a symmetric sample-by-sample matrix. Each pairwise value is added in both directions, so that `sample1` versus `sample2` and `sample2` versus `sample1` have the same IBD value. The diagonal is set to `1`, representing each sample compared with itself.
 
