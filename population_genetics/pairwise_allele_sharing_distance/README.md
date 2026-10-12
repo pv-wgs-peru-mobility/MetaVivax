@@ -1,101 +1,162 @@
-PAIRWISE SNP ALLELE-SHARING DISTANCE
-====================================
+# Pairwise SNP allele-sharing distance
 
-Script
-------
+This script calculates pairwise SNP allele-sharing similarity (`PS`) and genetic distance (`1 - PS`) between the 56 *Plasmodium vivax* infections. The resulting distance matrix is used as input for the minimum spanning tree (MST) and hierarchical clustering analyses.
+
+## Script
+
+```text
 pairwise_snp_allele_sharing_distance.R
+```
 
-Purpose
--------
-Calculate pairwise SNP similarity (PS) and genetic distance (1 - PS) for use in
-minimum spanning tree (MST) and hierarchical clustering analyses.
+## Required R packages
 
-Required R packages
--------------------
-- optparse
-- data.table
+```text
+optparse
+data.table
+```
 
-Input
------
-Default input file:
+## Input file
 
-  data/analysis_ready/pv_56samples_16485snps_gt.tsv
+The default input file is:
 
-Upstream quality control has already been applied,
-including genotype depth >5, sample missingness <=40%, SNP missingness <=50%,
-and retention of polymorphic biallelic SNPs. The resulting dataset contains
-56 samples and 16,485 SNPs.
+```text
+data/analysis_ready/pv_56samples_16485snps_gt.tsv
+```
 
-The input is a tab-delimited genotype table with columns:
+This is the analysis-ready genotype table containing the final 56 samples and 16,485 polymorphic biallelic SNPs after upstream quality control. The common QC steps include genotype depth `>5`, isolate missingness `<30%`, per-SNP missingness `<=60%`, and retention of polymorphic biallelic SNPs.
 
-  CHROM, POS, TYPE, sample1.GT, sample2.GT, ...
+The input table is tab-delimited and must contain:
 
-REF and ALT columns may also be present.
+```text
+CHROM, POS, TYPE, sample1.GT, sample2.GT, ...
+```
 
-Allele-sharing calculation
---------------------------
-For each pair of samples, only SNPs with non-missing genotype calls in both
-samples are compared.
+Optional `REF` and `ALT` columns may also be present.
 
-Per-locus similarity is scored as:
+## Allele-sharing calculation
 
-  1.0   identical allele composition
-  0.5   one shared allele
-  0.0   no shared alleles
+For each pair of samples, the script compares only SNPs where both samples have non-missing genotype calls. Missing calls are excluded pairwise, so each sample pair is compared using the SNPs that are informative for that pair.
 
-Examples:
+At each SNP, the genotype is treated as two observed alleles. Homozygous calls contain two copies of the same allele, while heterozygous calls contain two different alleles. The script then counts how many alleles are shared between the two samples at that SNP.
 
-  A/A vs A/A   -> 1.0
-  A/G vs A/G   -> 1.0
-  A/G vs A/A   -> 0.5
-  A/G vs G/G   -> 0.5
-  A/A vs G/G   -> 0.0
+The per-SNP allele-sharing score is:
 
-Pairwise similarity is the mean score across comparable SNPs:
+```text
+1.0  = both alleles are shared
+0.5  = one allele is shared
+0.0  = no alleles are shared
+```
 
-  PS = mean(per-locus allele-sharing score)
+For example:
 
-Genetic distance is:
+```text
+A/A vs A/A  -> both alleles match          -> score 1.0
+A/G vs A/G  -> both alleles match          -> score 1.0
+A/G vs G/A  -> both alleles match          -> score 1.0
+A/G vs A/A  -> one allele is shared        -> score 0.5
+A/G vs G/G  -> one allele is shared        -> score 0.5
+A/A vs G/G  -> no alleles are shared       -> score 0.0
+```
 
-  distance = 1 - PS
+This means that heterozygous calls are not discarded and are not treated as a single separate category. Instead, they contribute according to their allele composition. A heterozygous call can show full sharing with another heterozygous call containing the same two alleles, partial sharing with a homozygous call containing one of those alleles, or no sharing with a genotype containing neither allele.
 
+Pairwise similarity (`PS`) is the mean allele-sharing score across all comparable SNPs for that sample pair:
 
-Missing pairwise comparisons
-----------------------------
-If a sample pair has no SNPs with non-missing calls in both samples, the direct
-pairwise distance is unavailable. For the complete distance matrix used for
-MST and hierarchical clustering, this value is replaced with the maximum
-observed pairwise distance.
+```text
+PS = mean(per-SNP allele-sharing scores)
+```
 
-Output
-------
-Default output directory:
+Genetic distance is then calculated as:
 
-  results/pairwise_allele_sharing/
+```text
+distance = 1 - PS
+```
 
-Files produced:
+Therefore, pairs with higher allele sharing have smaller genetic distances.
 
-1. pairwise_allele_sharing_long.tsv
-   Pairwise similarity and distance results in long format.
+## Simple example
 
-2. pairwise_distance_matrix.tsv
-   Complete 1 - PS distance matrix for MST and hierarchical clustering.
+The example below shows how the calculation works for two samples across five SNPs.
 
-3. pairwise_PS_matrix.tsv
-   Pairwise PS similarity matrix.
+```text
+SNP   Sample 1   Sample 2   Score
+1     A/A        A/A        1.0
+2     A/G        A/A        0.5
+3     C/T        T/C        1.0
+4     G/G        A/A        0.0
+5     missing    A/G        excluded
+```
 
-4. pairwise_shared_loci_matrix.tsv
-   Number of comparable SNPs for each sample pair.
+The missing SNP is excluded for this pair. The pairwise similarity is:
 
-Example usage
--------------
+```text
+PS = (1.0 + 0.5 + 1.0 + 0.0) / 4 = 0.625
+```
+
+The genetic distance is:
+
+```text
+distance = 1 - 0.625 = 0.375
+```
+
+## Missing pairwise comparisons
+
+If a sample pair has too few comparable SNPs, the direct pairwise similarity and distance are reported as unavailable in the long-format output. For the complete distance matrix required by MST and hierarchical clustering, unavailable distances are replaced with the maximum observed pairwise distance so that the downstream graph and clustering methods receive a complete matrix.
+
+The script also records the number of comparable SNPs for every sample pair, allowing the user to check how much data contributed to each pairwise estimate.
+
+## Outputs
+
+The default output directory is:
+
+```text
+results/pairwise_allele_sharing/
+```
+
+The script writes four output files:
+
+```text
+pairwise_allele_sharing_long.tsv
+pairwise_distance_matrix.tsv
+pairwise_PS_matrix.tsv
+pairwise_shared_loci_matrix.tsv
+```
+
+`pairwise_allele_sharing_long.tsv` contains one row per sample pair, including the number of comparable SNPs, the number of fully shared, partially shared, and non-shared loci, the pairwise similarity (`PS`), and the genetic distance (`1 - PS`).
+
+`pairwise_distance_matrix.tsv` contains the complete `1 - PS` distance matrix used for MST and hierarchical clustering.
+
+`pairwise_PS_matrix.tsv` contains the pairwise allele-sharing similarity matrix.
+
+`pairwise_shared_loci_matrix.tsv` contains the number of non-missing comparable SNPs for each sample pair.
+
+## Example usage
+
 Using the default project structure:
 
-  Rscript pairwise_snp_allele_sharing_distance.R
+```bash
+Rscript pairwise_snp_allele_sharing_distance.R
+```
 
 Using explicit paths:
 
-  Rscript pairwise_snp_allele_sharing_distance.R \
-    --gt_table data/analysis_ready/pv_56samples_16485snps_gt.tsv \
-    --out_dir results/pairwise_allele_sharing
+```bash
+Rscript pairwise_snp_allele_sharing_distance.R \
+  --gt_table data/analysis_ready/pv_56samples_16485snps_gt.tsv \
+  --out_dir results/pairwise_allele_sharing
+```
 
+## Recommended repository location
+
+Keep this script and README in:
+
+```text
+population_genetics/pairwise_allele_sharing_distance/
+```
+
+Recommended folder contents:
+
+```text
+population_genetics/pairwise_allele_sharing_distance/pairwise_snp_allele_sharing_distance.R
+population_genetics/pairwise_allele_sharing_distance/README.md
+```
