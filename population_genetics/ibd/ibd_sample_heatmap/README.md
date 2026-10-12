@@ -35,6 +35,7 @@ For each community pair, the script counts the total number of isolate pairs and
 
 ```text
 R = number of pairs with IBD >= 0.50 / total number of pairs
+```
 
 The script treats each community comparison as an unordered pair. For example, Libertad - Gamitanacocha and Gamitanacocha - Libertad are summarized as the same comparison. The unordered summary is then converted into a symmetric table for plotting, so that the heatmap can be read in both directions.
 The community order used in the plot is:
