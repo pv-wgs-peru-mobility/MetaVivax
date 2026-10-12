@@ -1,87 +1,99 @@
-# IBD community heatmap
+    # IBD sample heatmap
 
-This script creates the community-by-community identity-by-descent (IBD) heatmap used to summarize parasite relatedness between the three study communities. It is a downstream plotting and summary script: it does not re-run `isoRelate`, but uses the annotated pairwise IBD table generated from the IBD analysis.
+    This script creates the sample-level pairwise identity-by-descent (IBD) heatmap used to visualize IBD sharing between *Plasmodium vivax* isolates. It is a downstream plotting script: it does not re-estimate IBD segments, but uses the pairwise IBD proportions produced by the IBD analysis.
 
+    In the manuscript workflow, this script belongs after the `isoRelate` IBD estimation described in the Methods section. It supports the IBD Results section by showing how pairwise IBD sharing is distributed across samples, communities, and traveler-associated infections.
 
-## Script
+    ## Script
 
-```text
-ibd_community_heatmap.R
-```
+    ```text
+    ibd_sample_heatmap.R
+    ```
 
-## Input file
+    ## Input files
 
-The script uses the annotated pairwise IBD table:
+    The script uses the annotated pairwise IBD dataset and the cleaned sample metadata:
 
-```text
-/scratch/antwerpen/208/vsc20843/WGS/results/gatk/pv/IBD/ibd_pairwise_relatedness_analysis/03_pairwise_ibd_dataset/77.19298_pairwise_ibd_annotated.csv
-```
+    ```text
+    /scratch/antwerpen/208/vsc20843/WGS/results/gatk/pv/IBD/ibd_pairwise_relatedness_analysis/03_pairwise_ibd_dataset/77.19298_pairwise_ibd_annotated.csv
+    /scratch/antwerpen/208/vsc20843/WGS/results/gatk/pv/IBD/ibd_pairwise_relatedness_analysis/02_metadata_clean/metadata_clean.csv
+    ```
 
-This file contains one row per isolate pair and includes the pairwise IBD proportion plus the community assignment of both isolates.
+    The pairwise IBD file must contain:
 
-The required columns are:
+    ```text
+    sample1, sample2, ibd_prop
+    ```
 
-```text
-sample1, sample2, ibd_prop, community1, community2
-```
+    The metadata file must contain:
 
-`ibd_prop` is the pairwise proportion of the genome inferred to be IBD between two isolates. Larger values indicate greater IBD sharing.
+    ```text
+    sample_id, community, travel_status
+    ```
 
-## Method
+    `ibd_prop` is the pairwise proportion of the genome inferred to be IBD between two isolates. Values range from `0` to `1`, with larger values indicating greater IBD sharing.
 
-Isolate pairs were classified as related when their pairwise IBD proportion was `>= 0.50` and as unrelated when their pairwise IBD proportion was `< 0.50`. This threshold was used to summarize strong pairwise relatedness in the community-level heatmap. The continuous pairwise IBD values were retained in the input table, while the threshold was used only to calculate the related-pair proportion `R` for each community pair.
+    ## Method
 
-For each community pair, the script counts the total number of isolate pairs and the number of pairs with `ibd_prop >= 0.50`. It then calculates the related-pair proportion `R` as:
+    The script first reads the annotated pairwise IBD file and the cleaned metadata file. The pairwise file contains one row per sample pair, while the metadata file provides the community and travel-status information used to annotate the heatmap.
 
-```text
-R = number of pairs with IBD >= 0.50 / total number of pairs
-```
+    The heatmap matrix is then built by converting the pairwise IBD table into a symmetric sample-by-sample matrix. Each pairwise value is added in both directions, so that `sample1` versus `sample2` and `sample2` versus `sample1` have the same IBD value. The diagonal is set to `1`, representing each sample compared with itself.
 
-The script treats each community comparison as an unordered pair. For example, Libertad - Gamitanacocha and Gamitanacocha - Libertad are summarized as the same comparison. The unordered summary is then converted into a symmetric table for plotting, so that the heatmap can be read in both directions.
-The community order used in the plot is:
-Libertad, Gamitanacocha, UrcoMirano
+    Samples are ordered by community and then by travel status. The community order used in the script is:
 
-Within-community cells show IBD relatedness among pairs of isolates sampled from the same community. Between-community cells show IBD relatedness among isolate pairs from two different communities. Each heatmap cell reports the number of related pairs, the total number of pairs, and the value of R.
-The color scale ranges from 0 to 1, where darker red indicates a larger proportion of related pairs at the IBD >= 0.50 threshold.
-```
+    ```text
+    Libertad, Gamitanacocha, UrcoMirano
+    ```
 
-## Outputs
+    Within each community, samples are ordered as:
 
-Outputs are written to:
+    ```text
+    Non-traveler, Traveler
+    ```
 
-```text
-/scratch/antwerpen/208/vsc20843/WGS/results/gatk/pv/IBD/ibd_pairwise_relatedness_analysis/12_final_selected_figures/
-```
+    This ordering makes the heatmap directly interpretable for the manuscript results: blocks along the diagonal show within-community IBD sharing, off-diagonal blocks show between-community IBD sharing, and the travel-status symbols show whether traveler-associated infections cluster separately or are embedded among other infections from the same communities.
 
-The main outputs are:
+    The plot uses a continuous IBD color scale from `0` to `1`. The legend includes `0.50` as a reference value, matching the IBD heatmap interpretation used in the manuscript. Community boundaries are shown with separator lines, and community labels are added to the top and left sides of the heatmap.
 
-```text
-final_community_heatmap_threshold_0_50_unordered_summary.csv
-final_community_heatmap_threshold_0_50_plot_data.csv
-final_community_heatmap_threshold_0_50_corrected.pdf
-final_community_heatmap_threshold_0_50_corrected.png
-final_community_heatmap_threshold_0_50_corrected.tiff
-```
+    Travel status is shown with symbols on the top and left margins of the heatmap:
 
-The script also writes:
+    ```text
+    circle   = Non-traveler
+    triangle = Traveler
+    ```
 
-```text
-final_community_heatmap_threshold_0_50_symmetry_check.csv
-```
+    The script also writes the exact plotting dataset used to create the heatmap. This file is useful for checking the sample order, IBD values, and metadata annotations used in the final figure.
 
-The PDF is used for vector-quality inspection, while the PNG and TIFF files are publication-ready raster versions of the same heatmap.
+    ## Outputs
 
-## Recommended repository location
+    Outputs are written to:
 
-Keep this script and README in a subfolder of the IBD analysis:
+    ```text
+    /scratch/antwerpen/208/vsc20843/WGS/results/gatk/pv/IBD/ibd_pairwise_relatedness_analysis/12_final_selected_figures/
+    ```
 
-```text
-population_genetics/IBD/ibd_community_heatmap/
-```
+    The main outputs are:
 
-Recommended folder contents:
+    ```text
+    final_sample_level_ibd_heatmap_metadata_ordered_plot_data.csv
+    final_sample_level_ibd_heatmap_metadata_ordered_annotated_corrected.pdf
+    final_sample_level_ibd_heatmap_metadata_ordered_annotated_corrected.png
+    final_sample_level_ibd_heatmap_metadata_ordered_annotated_corrected.tiff
+    ```
 
-```text
-population_genetics/IBD/ibd_community_heatmap/ibd_community_heatmap.R
-population_genetics/IBD/ibd_community_heatmap/README.md
-```
+    The PDF is used for vector-quality inspection, while the PNG and TIFF files are publication-ready raster versions of the same heatmap.
+
+    ## Recommended repository location
+
+    Keep this script and README in a subfolder of the IBD analysis:
+
+    ```text
+    population_genetics/IBD/ibd_sample_heatmap/
+    ```
+
+    Recommended folder contents:
+
+    ```text
+    population_genetics/IBD/ibd_sample_heatmap/ibd_sample_heatmap.R
+    population_genetics/IBD/ibd_sample_heatmap/README.md
+    ```
