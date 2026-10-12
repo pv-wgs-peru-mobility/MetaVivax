@@ -114,8 +114,6 @@ distance_replaced = TRUE
 
 The matrix file pairwise_shared_loci_matrix.tsv records the number of comparable SNPs for every sample pair, so the amount of data used for each pairwise estimate can be checked.
 
-So, `--min_shared_loci` is set to `1` by default. The reason is that the script is applied **after** QC to a dense analysis-ready SNP table, so this threshold mainly prevents calculation only for pairs with no overlapping genotype data.
-
 ## Outputs
 
 The default output directory is:
