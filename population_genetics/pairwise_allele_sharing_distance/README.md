@@ -99,9 +99,22 @@ distance = 1 - 0.625 = 0.375
 
 ## Missing pairwise comparisons
 
-If a sample pair has too few comparable SNPs, the direct pairwise similarity and distance are reported as unavailable in the long-format output. For the complete distance matrix required by MST and hierarchical clustering, unavailable distances are replaced with the maximum observed pairwise distance so that the downstream graph and clustering methods receive a complete matrix.
+For each sample pair, the script counts the number of SNPs where both samples have non-missing genotype calls. This value is reported as `n_shared_nonmissing_loci`.
 
-The script also records the number of comparable SNPs for every sample pair, allowing the user to check how much data contributed to each pairwise estimate.
+A pairwise `PS` value is calculated only when the number of comparable SNPs is at least the value set by `--min_shared_loci`. In this script, the default value is:
+
+```text
+--min_shared_loci = 1
+```
+
+With this default, a pairwise comparison is calculated whenever the two samples share at least one SNP with non-missing genotype calls. This is suitable here because the input is already an analysis-ready dataset with 56 samples and 16,485 SNPs after upstream quality control, so sample pairs are expected to have many comparable SNPs.
+If a sample pair has fewer comparable SNPs than --min_shared_loci, the script keeps the pair in the long-format output but reports the direct PS and 1 - PS distance as NA.
+MST and hierarchical clustering require a complete numeric distance matrix. Therefore, any unavailable off-diagonal distance is replaced with the maximum observed pairwise distance. These replacements are flagged in pairwise_allele_sharing_long.tsv using:
+distance_replaced = TRUE
+
+The matrix file pairwise_shared_loci_matrix.tsv records the number of comparable SNPs for every sample pair, so the amount of data used for each pairwise estimate can be checked.
+
+So, `--min_shared_loci` is set to `1` by default. The reason is that the script is applied **after** QC to a dense analysis-ready SNP table, so this threshold mainly prevents calculation only for pairs with no overlapping genotype data.
 
 ## Outputs
 
