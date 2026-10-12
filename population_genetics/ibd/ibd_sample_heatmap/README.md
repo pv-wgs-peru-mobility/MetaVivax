@@ -3,7 +3,7 @@ This script creates the sample-level pairwise identity-by-descent (IBD) heatmap 
 In the manuscript workflow, this script belongs after the isoRelate IBD estimation described in the Methods section. It supports the IBD Results section by showing how pairwise IBD sharing is distributed across samples, communities, and traveler-associated infections.
 Script
 ibd_sample_heatmap.R
-Input files
+Input files 
 The script uses the annotated pairwise IBD dataset and the cleaned sample metadata:
 /scratch/antwerpen/208/vsc20843/WGS/results/gatk/pv/IBD/ibd_pairwise_relatedness_analysis/03_pairwise_ibd_dataset/77.19298_pairwise_ibd_annotated.csv
 /scratch/antwerpen/208/vsc20843/WGS/results/gatk/pv/IBD/ibd_pairwise_relatedness_analysis/02_metadata_clean/metadata_clean.csv
