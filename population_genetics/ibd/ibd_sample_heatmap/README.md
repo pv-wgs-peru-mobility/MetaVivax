@@ -2,7 +2,6 @@
 
 This script creates the sample-level pairwise identity-by-descent (IBD) heatmap used to visualize IBD sharing between *Plasmodium vivax* isolates. It is a downstream plotting script: it does not re-estimate IBD segments, but uses the pairwise IBD proportions produced by the IBD analysis.
 
-In the manuscript workflow, this script belongs after the `isoRelate` IBD estimation described in the Methods section. It supports the IBD Results section by showing how pairwise IBD sharing is distributed across samples, communities, and traveler-associated infections.
 
 ## Script
 
@@ -12,7 +11,7 @@ ibd_sample_heatmap.R
 
 ## Input files
 
-The script uses the annotated pairwise IBD dataset and the cleaned sample metadata:
+The script uses the annotated pairwise IBD dataset and the sample metadata:
 
 ```text
 /scratch/antwerpen/208/vsc20843/WGS/results/gatk/pv/IBD/ibd_pairwise_relatedness_analysis/03_pairwise_ibd_dataset/77.19298_pairwise_ibd_annotated.csv
