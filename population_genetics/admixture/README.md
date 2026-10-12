@@ -64,13 +64,11 @@ For each dataset, ADMIXTURE is run for:
 K = 2, 3, 4, 5, 6, 7, 8, 9, 10
 ```
 
-Here, `K` represents the number of inferred ancestry components tested by ADMIXTURE. Testing `K = 2` to `K = 10` allows the analysis to compare models with different numbers of inferred components rather than selecting a single value in advance.
+Here, `K` represents the number of inferred ancestry components tested by ADMIXTURE. Testing `K = 2` to `K = 10` allows the analysis to compare models with different numbers of inferred components rather than selecting a single value in advance. 
 
 For each value of `K`, the script performs `5` independent ADMIXTURE runs using different random seeds. Each run uses `100` bootstrap replicates. The independent runs are used to check that the ancestry estimates and cross-validation results are consistent across repeated runs.
 
 The script extracts the cross-validation error from each ADMIXTURE log file. For each dataset, the mean cross-validation error is calculated for every tested `K`. The best-supported `K` is selected as the value with the lowest mean cross-validation error for that dataset.
-
-For each `K`, the replicate with the lowest cross-validation error is copied as the representative `.Q` and `.P` output for plotting.
 
 ADMIXTURE components are interpreted as inferred genetic structure within the analyzed dataset. They are not interpreted as definitive geographic ancestry or as direct assignment to external source populations.
 
