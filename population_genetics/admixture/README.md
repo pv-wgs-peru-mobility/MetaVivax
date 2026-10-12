@@ -6,7 +6,7 @@ This folder contains the scripts used to prepare ADMIXTURE input files, perform 
 
 | Script | Purpose |
 | --- | --- |
-| `ld_pruning_admixture.sh` | Converts the analysis VCF to PLINK BED format, applies the manuscript QC thresholds, and creates unpruned and LD-pruned datasets. |
+| `ld_pruning_admixture.sh` | Converts the VCF to PLINK BED format, applies the QC thresholds, and creates unpruned and LD-pruned datasets. |
 | `run_admixture.sh` | Runs ADMIXTURE for K = 2 to K = 10 and creates CV and ancestry plots. |
 
 ## Input
