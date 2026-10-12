@@ -23,9 +23,7 @@ The default input file is:
 data/analysis_ready/pv_56samples_16485snps_gt.tsv
 ```
 
-This is the analysis-ready genotype table containing the final 56 samples and 16,485 polymorphic biallelic SNPs after upstream quality control. The common QC steps include genotype depth `>5`, isolate missingness `<30%`, per-SNP missingness `<=60%`, and retention of polymorphic biallelic SNPs.
-
-The input table is tab-delimited and must contain:
+This is the analysis-ready genotype table containing the final 56 samples and 16,485 polymorphic biallelic SNPs after upstream quality control. The input table is tab-delimited and must contain:
 
 ```text
 CHROM, POS, TYPE, sample1.GT, sample2.GT, ...
