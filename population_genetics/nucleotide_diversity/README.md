@@ -1,7 +1,6 @@
 # Nucleotide diversity
 
-`nucleotide_diversity.R` calculates SNP-based nucleotide diversity (pi) at each of the 16,485 polymorphic biallelic SNPs, separately by community and travel status. It produces the per-locus distributions used for the nucleotide-diversity component of the manuscript's genetic-diversity analysis.
-
+`nucleotide_diversity.R` calculates SNP-based nucleotide diversity (pi) at each of the 16,485 polymorphic biallelic SNPs, separately by community and travel status.
 ## Input
 
 ```text
@@ -9,11 +8,9 @@ data/analysis_ready/pv_56samples_16485snps_gt.tsv
 data/analysis_ready/pv_56samples_metadata.tsv
 ```
 
-The analysis-ready genotype table retains both observed alleles in each call, for example `0/0`, `0/1`, `1/1` or `C/C`, `C/T`, `T/T`. It contains `CHROM`, `POS`, `TYPE` and sample columns, with optional `REF` and `ALT`. Sample names may end in `.GT`. Metadata contains a sample identifier (`id`, `Sample`, `sample` or `sample_id`), `community` and `travel` (`0` = non-traveler, `1` = traveler).
+The genotype table retains both observed alleles in each call, for example `0/0`, `0/1`, `1/1` or `C/C`, `C/T`, `T/T`. It contains `CHROM`, `POS`, `TYPE` and sample columns, with optional `REF` and `ALT`. Sample names may end in `.GT`. Metadata contains a sample identifier (`id`, `Sample`, `sample` or `sample_id`), `community` and `travel` (`0` = non-traveler, `1` = traveler).
 
-This is the same genotype table used upstream of MST and hierarchical clustering, not the resulting pairwise distance matrix. Common quality control has already been applied. No additional MAF or missingness filter is applied here, so all 16,485 SNPs enter the group-specific calculations described in the Methods.
-
-## Method
+## Method 
 
 At each SNP, allele frequencies are calculated from the complete calls within the selected group. A homozygous call contributes two copies of one allele, and a heterozygous call contributes one copy of each allele. Consequently, each infection has equal total weight and a `C/T` call contributes half C and half T to the allele-frequency calculation. Phased calls and reversed allele order are treated equivalently.
 
@@ -27,13 +24,13 @@ For a biallelic SNP, this is equivalent to `2 * p * (1 - p)`. At least two non-m
 
 ## Heterozygote example
 
-| Infection | Genotype | C count | T count |
-| --- | --- | --- | --- |
-| S1 | C/C | 2 | 0 |
-| S2 | C/T | 1 | 1 |
-| S3 | C/C | 2 | 0 |
-| S4 | T/T | 0 | 2 |
-| Total | | 5 | 3 |
+```text
+S1: C/C -> two C alleles         -> C = 2, T = 0
+S2: C/T -> one C and one T       -> C = 1, T = 1
+S3: C/C -> two C alleles         -> C = 2, T = 0
+S4: T/T -> two T alleles         -> C = 0, T = 2
+Total                            -> C = 5, T = 3
+```
 
 ```text
 p_C = 5 / 8 = 0.625
@@ -45,7 +42,7 @@ The `C/T` call is retained and contributes to both allele frequencies. This is t
 
 ## Comparisons and figure
 
-Calculations are performed for all infections, non-travelers and travelers within Libertad, Gamitanacocha and Urco Mirano. The nine distributions are displayed as violin plots with embedded boxplots and median points.
+Calculations are performed for all infections, non-travelers, and travelers within Libertad, Gamitanacocha and Urco Mirano. The nine distributions are displayed as violin plots with embedded boxplots and median points.
 
 For each travel-status category, community differences are assessed using a Friedman test with the same SNP as the matched unit. Only loci with an estimate in all three communities enter that test. Pairwise community comparisons use paired Wilcoxon signed-rank tests on those matched loci. Within-community traveler/non-traveler comparisons use Wilcoxon rank-sum tests, as specified in the manuscript. Pairwise p-values use Bonferroni correction and `p < 0.05` as the significance threshold.
 
