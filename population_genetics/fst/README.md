@@ -57,7 +57,7 @@ S2: C/T -> one C and one T       -> C = 1, T = 1
 S3: T/T -> two T alleles         -> C = 0, T = 2
 S4: T/T -> two T alleles         -> C = 0, T = 2
 Total                            -> C = 1, T = 7
-```text
+```
 
 ```text
 Group A: C count = 5, T count = 3; p_C = 5/8 = 0.625
