@@ -236,7 +236,7 @@ for species in $(tail -n+2 "${samplesheet}" | cut -f2 -d, | sort | uniq); do
         "${vcf_dir}/${species}/haplotypecaller" \
         "${vcf_dir}/${species}/genomicsdbimport" \
         "${vcf_dir}/${species}/genotypegvcfs" \
-        "${vcf_dir}/${species}/variantfilter/snp" \
+        "${vcf_dir}/${species}/variantfilter/snp" \ 
         "${vcf_dir}/${species}/variantfilter/indel"
 
     ref=
