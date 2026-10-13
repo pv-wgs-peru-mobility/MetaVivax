@@ -65,11 +65,7 @@ The stage commands below are **Bash script invocations with command-line options
 
 `bash` runs the named shell script. `${PROJECT_ROOT}` expands to the project-directory path, and the double quotes keep each complete path together as one argument. A backslash at the end of a line continues the same command on the following line; it must be the final character on that line.
 
-`--input_dir` specifies the directory containing the raw reads, and `--output_dir` specifies where results are written. These are options defined by `qc.sh`, followed by their values. The shorter options `-r1`, `-r2` and `-e` are also defined by the script.
-
-### Meaning of `-r1 "_1" -r2 "_2"`
-
-These options tell the script which filename suffix identifies each mate of a paired-end read pair:
+`--input_dir` specifies the directory containing the raw reads, and `--output_dir` specifies where results are written. These are options defined by `qc.sh`, followed by their values. The shorter options `-r1`, `-r2` and `-e` are also defined by the script. These options tell the script which filename suffix identifies each mate of a paired-end read pair:
 
 ```text
 Sample01_1.fastq.gz -> suffix _1 -> read 1
