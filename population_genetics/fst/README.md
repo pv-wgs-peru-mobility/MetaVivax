@@ -43,12 +43,19 @@ The script obtains 95% percentile confidence intervals by resampling SNP loci wi
 
 Consider two groups of four infections at one SNP:
 
-| Infection within group | Group A genotype | Group B genotype |
-| --- | --- | --- |
-| 1 | C/C | T/T |
-| 2 | C/T | C/T |
-| 3 | C/C | T/T |
-| 4 | T/T | T/T |
+Group A
+S1: C/C -> two C alleles         -> C = 2, T = 0
+S2: C/T -> one C and one T       -> C = 1, T = 1
+S3: C/C -> two C alleles         -> C = 2, T = 0
+S4: T/T -> two T alleles         -> C = 0, T = 2
+Total                            -> C = 5, T = 3
+
+Group B
+S1: T/T -> two T alleles         -> C = 0, T = 2
+S2: C/T -> one C and one T       -> C = 1, T = 1
+S3: T/T -> two T alleles         -> C = 0, T = 2
+S4: T/T -> two T alleles         -> C = 0, T = 2
+Total                            -> C = 1, T = 7
 
 ```text
 Group A: C count = 5, T count = 3; p_C = 5/8 = 0.625
