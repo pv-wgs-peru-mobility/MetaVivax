@@ -31,13 +31,13 @@ Here, `n` is the number of infections with complete genotype calls at that SNP w
 
 For four infections at one SNP:
 
-| Infection | Genotype | C count | T count |
-| --- | --- | --- | --- |
-| S1 | C/C | 2 | 0 |
-| S2 | C/T | 1 | 1 |
-| S3 | C/C | 2 | 0 |
-| S4 | T/T | 0 | 2 |
-| Total | | 5 | 3 |
+```text
+S1: C/C -> two C alleles         -> C = 2, T = 0
+S2: C/T -> one C and one T       -> C = 1, T = 1
+S3: C/C -> two C alleles         -> C = 2, T = 0
+S4: T/T -> two T alleles         -> C = 0, T = 2
+Total                           -> C = 5, T = 3
+```
 
 ```text
 p_C = 5 / 8 = 0.625
