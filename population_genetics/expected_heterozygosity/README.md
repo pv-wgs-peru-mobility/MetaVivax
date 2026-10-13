@@ -28,7 +28,7 @@ He = n / (n - 1) * (1 - sum(p_i^2))
 Here, `n` is the number of infections with complete genotype calls at that SNP within the group, and `p_i` is the frequency of allele `i`. The `n/(n-1)` factor is the sample-size correction. `n`is the number of isolates (infections) with complete genotype calls at that SNP within the group being analysed.
 
 For each SNP, He is calculated only when at least two infections in the group have complete genotype calls, such as C/C or C/T. Fully missing calls (./.) and partially missing calls (C/.) are excluded entirely. If fewer than two complete calls remain, He is recorded as NA. SNPs that are monomorphic within a group retain He = 0 in both summaries and plots. Identical heterozygous calls such as C/T still contain two alleles and therefore do not give He = 0.
-
+ 
 ## Heterozygote example
 
 For four infections at one SNP:
