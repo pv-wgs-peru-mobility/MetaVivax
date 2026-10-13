@@ -1,7 +1,7 @@
 # Pairwise SNP allele-sharing distance
 
 This script calculates pairwise SNP allele-sharing similarity (`PS`) and genetic distance (`1 - PS`) between the 56 *Plasmodium vivax* infections. The resulting distance matrix is used as input for the minimum spanning tree (MST) and hierarchical clustering analyses.
-
+ 
 ## Script
 
 ```text
