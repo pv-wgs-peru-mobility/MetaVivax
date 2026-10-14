@@ -74,7 +74,7 @@ Sample01_2.fastq.gz -> suffix _2 -> read 2
 
 The shared prefix, `Sample01`, connects the two files as a pair. The `-e ".fastq.gz"` option specifies the raw-file extension separately from the read suffix.
 
-## Pipeline stages
+## Pipeline steps
 
 ### 1. Read quality control and trimming
 
