@@ -1,4 +1,4 @@
-# WGS pipeline and SnpEff database
+# WGS pipeline
 
 ## Overview
 
